@@ -1,0 +1,65 @@
+# This is Git's per-user configuration file.
+[user]
+  name = Ezequiel Rosas
+  email = ezequiel.rosas@digitalonus.com
+
+[core]
+  autocrlf = input
+  excludesfile = ~/.gitignore
+
+[push]
+  default = simple
+
+[pull]
+  rebase = false
+
+[color]
+  ui = auto
+  branch = auto
+  diff = auto
+  interactive = auto
+  status = auto
+
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+
+[alias]
+  st = status -suno
+  lg = log --graph --decorate --oneline --abbrev-commit
+  lga = log --graph --decorate --oneline --abbrev-commit --branches --remotes --tags --all
+  ci = commit -a
+  co = checkout
+  rco = "!f() { git reset HEAD -q -- \"$@\"; git checkout HEAD -q -- \"$@\"; }; f"
+  rhh = reset --hard HEAD
+  diffh = diff HEAD --
+  pick = cherry-pick
+  edit = reset "HEAD^"
+  drop = rebase --skip
+  continue = rebase --continue
+  abort = rebase --abort
+  fa = fetch --all
+  pf = push --force
+  pr = pull --rebase
+  ff = merge --ff-only
+  rei = rebase --interactive
+  pup = !git pull && git submodule init && git submodule update && git submodule status && git submodule foreach git pull origin master
+
+[merge]
+  commit = no
+
+[diff]
+  tool = vimdiff
+
+[merge]
+  tool = vimdiff
