@@ -29,7 +29,7 @@
 
 # OS generated files #
 ######################
-mvnvm.properties
+/mvnvm.properties
 .java-version
 .DS_Store
 .DS_Store?
@@ -53,8 +53,9 @@ hs_err_pid*
 .idea
 *.iml
 .metadata
-bin/
-tmp/
+/bin/
+/tmp/
+/target/
 *.tmp
 *.bak
 *.swp

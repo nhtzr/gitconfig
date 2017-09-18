@@ -21,14 +21,19 @@
   status = auto
 
 [color "branch"]
-  current = yellow reverse
-  local = yellow
-  remote = green
+  current = green reverse
+  local = normal
+  remote = blue
+  upstream = green
 [color "diff"]
-  meta = yellow bold
-  frag = magenta bold
-  old = red bold
-  new = green bold
+  meta = blue bold reverse
+  frag = blue dim reverse
+  commit = blue bold reverse ul
+  func = normal reverse
+  context = normal
+  old = dim
+  new = bold
+  whitespace = white reverse
 [color "status"]
   added = yellow
   changed = green
@@ -36,15 +41,19 @@
 
 [alias]
   st = status -suno
+  stu = status -su
   lg = log --graph --decorate --oneline --abbrev-commit
   lga = log --graph --decorate --oneline --abbrev-commit --branches --remotes --tags --all
-  ci = commit -a
+  adu = "!f() { git add -u; git status -su; }; f;"
   co = checkout
+  cob = checkout -b
   rco = "!f() { git reset HEAD -q -- \"$@\"; git checkout HEAD -q -- \"$@\"; }; f"
+  rh = reset --hard
   rhh = reset --hard HEAD
-  diffh = diff HEAD --
+  dh = diff HEAD --
+  dhh = diff HEAD -- .
   pick = cherry-pick
-  edit = reset "HEAD^"
+  edit = "!f() { git reset 'HEAD^' ; echo 'Remember to run git commit'; }; f"
   drop = rebase --skip
   continue = rebase --continue
   abort = rebase --abort
@@ -52,14 +61,14 @@
   pf = push --force
   pr = pull --rebase
   ff = merge --ff-only
-  rei = rebase --interactive
+  cim = merge --no-ff
+  rbi = rebase --interactive
   pup = !git pull && git submodule init && git submodule update && git submodule status && git submodule foreach git pull origin master
-
-[merge]
-  commit = no
 
 [diff]
   tool = vimdiff
+  compactionHeuristic = true
 
 [merge]
   tool = vimdiff
+
