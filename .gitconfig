@@ -43,6 +43,7 @@
   st = status -suno
   stu = status -su
   lg = log --graph --decorate --oneline --abbrev-commit
+  lgm = log --graph --decorate --oneline --abbrev-commit --first-parent
   lga = log --graph --decorate --oneline --abbrev-commit --branches --remotes --tags --all
   adu = "!f() { git add -u; git status -su; }; f;"
   co = checkout
@@ -53,21 +54,30 @@
   dh = diff HEAD --
   dhh = diff HEAD -- .
   pick = cherry-pick
-  edit = "!f() { git reset 'HEAD^' ; echo 'Remember to run git commit'; }; f"
+  edit = "!f() { git reset --soft 'HEAD^' -q ; git status -su ; echo 'Remember to run \\033[0;34mgit commit\\033[0m'; }; f"
   drop = rebase --skip
+  skip = rebase --skip
   continue = rebase --continue
   abort = rebase --abort
   fa = fetch --all
   pf = push --force
   pr = pull --rebase
+  prom = pull --rebase origin master
   ff = merge --ff-only
+  rlff = merge --ff-only HEAD@{1}
   cim = merge --no-ff
   rbi = rebase --interactive
+  pu = "! git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)"
   pup = !git pull && git submodule init && git submodule update && git submodule status && git submodule foreach git pull origin master
+  branches = for-each-ref --format='%(refname)'
+  tags = for-each-ref --format='%(refname)' refs/tags
+  origin-branches = for-each-ref --format='%(refname)' refs/remotes/origin
+  remove-branches = "! f(){ tmp=\"$(mktemp)\" ; git branch -vv | grep origin > $tmp ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 $tmp | awk '{print $1}' | xargs git branch -d ; }; f;"
+  prune-all = "!{ git prune; git remote | while read -r remote; do git remote prune $remote; done; };"
 
 [diff]
   tool = vimdiff
-  compactionHeuristic = true
+  indentHeuristic = true
 
 [merge]
   tool = vimdiff

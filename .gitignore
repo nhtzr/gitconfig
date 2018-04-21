@@ -29,6 +29,8 @@
 
 # OS generated files #
 ######################
+/docker-ip.txt
+/exposed-port.txt
 /mvnvm.properties
 .java-version
 .DS_Store
@@ -53,7 +55,6 @@ hs_err_pid*
 .idea
 *.iml
 .metadata
-/bin/
 /tmp/
 /target/
 *.tmp
