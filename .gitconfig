@@ -11,7 +11,7 @@
   default = simple
 
 [pull]
-  rebase = false
+  ff = only
 
 [color]
   ui = auto
@@ -42,10 +42,11 @@
 [alias]
   st = status -suno
   stu = status -su
-  lg = log --graph --decorate --oneline --abbrev-commit
-  lgm = log --graph --decorate --oneline --abbrev-commit --first-parent
-  lga = log --graph --decorate --oneline --abbrev-commit --branches --remotes --tags --all
+  lg = "!nvim -c 'GV'"
+  lgm = "!nvim -c 'GV --first-parent'"
+  lga = "!nvim -c 'GV --tags --all'"
   adu = "!f() { git add -u; git status -su; }; f;"
+  bmw = blame -M -w
   co = checkout
   cob = checkout -b
   rco = "!f() { git reset HEAD -q -- \"$@\"; git checkout HEAD -q -- \"$@\"; }; f"
@@ -69,13 +70,14 @@
   rbi = rebase --interactive
   pu = "! git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)"
   pup = !git pull && git submodule init && git submodule update && git submodule status && git submodule foreach git pull origin master
-  branches = for-each-ref --format='%(refname)'
+  refs = for-each-ref --format='%(refname)'
   tags = for-each-ref --format='%(refname)' refs/tags
-  origin-branches = for-each-ref --format='%(refname)' refs/remotes/origin
+  rems = for-each-ref --format='%(refname)' refs/remotes
   remove-branches = "! f(){ tmp=\"$(mktemp)\" ; git branch -vv | grep origin > $tmp ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 $tmp | awk '{print $1}' | xargs git branch -d ; }; f;"
   prune-all = "!{ git prune; git remote | while read -r remote; do git remote prune $remote; done; };"
 
 [diff]
+  algorithm = patience
   tool = vimdiff
   indentHeuristic = true
 
