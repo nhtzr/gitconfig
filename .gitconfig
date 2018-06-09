@@ -54,6 +54,7 @@
   rhh = reset --hard HEAD
   dh = diff HEAD --
   dhh = diff HEAD -- .
+  fixup = "!f() { TARGET=$(git rev-parse "$1"); git commit --fixup=$TARGET ${@:2} && EDITOR=true git rebase -i --autostash --autosquash $TARGET^; }; f"
   pick = cherry-pick
   edit = "!f() { git reset --soft 'HEAD^' -q ; git status -su ; echo 'Remember to run \\033[0;34mgit commit\\033[0m'; }; f"
   drop = rebase --skip
