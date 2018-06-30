@@ -53,6 +53,7 @@
   co = checkout
   cob = checkout -b
   rco = "!f() { git reset HEAD -q -- \"$@\"; git checkout HEAD -q -- \"$@\"; }; f"
+  rs = reset --soft
   rh = reset --hard
   rhh = reset --hard HEAD
   dh = diff HEAD --
@@ -68,8 +69,8 @@
   pf = push --force
   pr = pull --rebase
   prom = pull --rebase origin master
-  srom = "! f() { git fetch origin master; git reset --soft origin/master };f"
-  irom = "! f() { git fetch origin master; git rebase --interactive origin/master };f"
+  srom = "! f() { git fetch origin master; git reset --soft origin/master; };f"
+  irom = rebase --interactive origin/master
   rbi = rebase --interactive
   ff = merge --ff-only
   rlff = merge --ff-only HEAD@{1}
