@@ -56,7 +56,7 @@
   dhh = diff HEAD -- .
   fixup = "!f() { TARGET=$(git rev-parse "$1"); git commit --fixup=$TARGET ${@:2} && EDITOR=true git rebase -i --autostash --autosquash $TARGET^; }; f"
   pick = cherry-pick
-  edit = "!f() { git reset --soft 'HEAD^' -q ; git status -su ; echo 'Remember to run \\033[0;34mgit commit\\033[0m'; }; f"
+  edit = "!f() { TARGET=$(git rev-parse HEAD); printf 'You can abort this edition with \\033[0;34mgit ff '; printf $(git rev-parse HEAD); echo '\\033[0m'; git show $TARGET --format=full -s; git reset --soft 'HEAD^' -q ; }; f"
   drop = rebase --skip
   skip = rebase --skip
   continue = rebase --continue
