@@ -65,10 +65,12 @@
   pf = push --force
   pr = pull --rebase
   prom = pull --rebase origin master
+  srom = "! f() { git fetch origin master; git reset --soft origin/master };f"
+  irom = "! f() { git fetch origin master; git rebase --interactive origin/master };f"
+  rbi = rebase --interactive
   ff = merge --ff-only
   rlff = merge --ff-only HEAD@{1}
   cim = merge --no-ff
-  rbi = rebase --interactive
   pu = "! git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)"
   pup = !git pull && git submodule init && git submodule update && git submodule status && git submodule foreach git pull origin master
   refs = for-each-ref --format='%(refname)'
