@@ -40,12 +40,14 @@
   untracked = cyan
 
 [alias]
+  top = rev-parse --show-toplevel
+  pwd = rev-parse --show-prefix
   st = status -suno
   stu = status -su
   sti = "!echo ':Gstatus\n:wincmd o' | nvim -s -"
-  lg = "!nvim -c 'GV'"
-  lgm = "!nvim -c 'GV --first-parent'"
-  lga = "!nvim -c 'GV --tags --all'"
+  lg =  "!f() { nvim -c \"GV ${PARAMETERS} $@\" -c 'tabonly'; }; PARAMETERS='' f"
+  lgm = "!f() { nvim -c \"GV ${PARAMETERS} $@\" -c 'tabonly'; }; PARAMETERS='--first-parent' f"
+  lga = "!f() { nvim -c \"GV ${PARAMETERS} $@\" -c 'tabonly'; }; PARAMETERS='--tags --all' f"
   adu = "!f() { git add -u; git status -su; }; f;"
   bmw = blame -M -w
   co = checkout
