@@ -44,7 +44,7 @@
   pwd = rev-parse --show-prefix
   st = status -suno
   stu = status -su
-  sti = "!echo ':Gstatus\n:wincmd o' | nvim -s -"
+  sti = "!echo ':Gstatus\n:wincmd o\n:nunmap <silent> <buffer> q\n:nnoremap q :quit<cr>' | nvim -s -"
   lg =  "!f() { nvim -c \"GV ${PARAMETERS} $@\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit<cr>'; }; PARAMETERS='' f"
   lgm = "!f() { nvim -c \"GV ${PARAMETERS} $@\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit<cr>'; }; PARAMETERS='--first-parent' f"
   lga = "!f() { nvim -c \"GV ${PARAMETERS} $@\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit<cr>'; }; PARAMETERS='--tags --all' f"
