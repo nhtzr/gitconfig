@@ -73,8 +73,6 @@
   irom = rebase --interactive origin/master
   rbi = rebase --interactive
   ff = merge --ff-only
-  rlff = merge --ff-only HEAD@{1}
-  cim = merge --no-ff
   pu = "! git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)"
   pup = !git pull && git submodule init && git submodule update && git submodule status && git submodule foreach git pull origin master
   refs = for-each-ref --format='%(refname)'
