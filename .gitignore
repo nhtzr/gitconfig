@@ -27,11 +27,15 @@
 *.sql
 *.sqlite
 
-# OS generated files #
-######################
+# Project config files #
+########################
 /docker-ip.txt
 /exposed-port.txt
 /mvnvm.properties
+.envrc
+
+# OS generated files #
+######################
 .java-version
 .DS_Store
 .DS_Store?
