@@ -40,7 +40,7 @@
   untracked = cyan
 
 [alias]
-  top = "!f() { echo $(git rev-parse --show-toplevel)/${1} ; } ; f"
+  top = "!f() { echo $(git rev-parse --show-toplevel)${1+/}$1 ; } ; f"
   pwd = rev-parse --show-prefix
   st = "!f() { git status -suno ; }; f"
   stu = "!f() { git status -su ; }; f"
@@ -55,6 +55,9 @@
   co = checkout
   cob = checkout -b
   pf = push --force-with-lease
+  ph = "!f()   { git fetch ${1?} ; git reset --hard  ${1?}/${2:-$(git rev-parse --abbrev-ref HEAD)} ;}; f"
+  pho = "!f()  { git fetch origin; git reset --hard origin/${1:-$(git rev-parse --abbrev-ref HEAD)} ;}; f"
+  phom = "!f() { git fetch origin; git reset --hard origin/master ;}; f"
   pr = pull --rebase
   ir = rebase --interactive
   rs = reset --soft
@@ -87,10 +90,14 @@
   tags = for-each-ref --format='%(refname)' refs/tags
   rems = for-each-ref --format='%(refname)' refs/remotes
   remove-branches = "! f(){ tmp=\"$(mktemp)\" ; git branch -vv | grep origin > $tmp ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 $tmp | awk '{print $1}' | xargs -r git branch -d ; }; f;"
-  prune-all = "!{ git prune; git remote | while IFS='\n' read -r remote; do git remote prune $remote; done; git remove-branches; };"
+  prune-all = "!{ git fetch --all --prune; git prune; git remote | while IFS='\n' read -r remote; do git remote prune $remote; done; git remove-branches; };"
   cdf = clean -df
   download = clone --depth=1
   bmw = blame -M -w
+  track = branch -u
+  code-changes = "!git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10"
+  # https://stackoverflow.com/questions/4698759/ v
+  shallow = "!f(){ git show-ref -s HEAD > .git/shallow; git reflog expire --expire=0; git prune; git prune-packed; git gc; }; f"
 
 [diff]
   algorithm = patience
