@@ -82,7 +82,7 @@
   skip = rebase --skip
   continue = rebase --continue
   abort = rebase --abort
-  fa = fetch --all
+  fa = "!f(){ git remote set-branches origin '*'; git fetch --all; }; f"
   ff = merge --ff-only
   pu = "!f(){ git push --set-upstream ${1:-origin} $(git rev-parse --abbrev-ref HEAD); }; f"
   pup = !git pull && git submodule init && git submodule update && git submodule status && git submodule foreach git pull origin master
