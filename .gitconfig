@@ -46,37 +46,40 @@
   stu = "!f() { git status -su ; }; f"
   view = show
   info = show
-  sti = "!echo ':silent Gstatus\n:silent wincmd o\n:silent nunmap <silent> <buffer> q\n:silent nnoremap q :quit<cr>' | nvim -s -"
-  lg =  "!f() { nvim -c \"GV ${PARAMETERS} $@\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; PARAMETERS='' f"
-  lgm = "!f() { nvim -c \"GV ${PARAMETERS} $@\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; PARAMETERS='--first-parent' f"
-  lga = "!f() { nvim -c \"GV ${PARAMETERS} $@\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; PARAMETERS='--tags --all' f"
+  sti = !echo ':silent Gstatus\n:silent wincmd o\n:silent nunmap <silent> <buffer> q\n:silent nnoremap q :quit<cr>' | nvim -s -
+  lg = "!f() {  nvim -c \"$(toCommandString GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f"
+  lgm = "!f() { nvim -c \"$(toCommandString GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f --first-parent"
+  lga = "!f() { nvim -c \"$(toCommandString GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f --tags --all"
   adu = "!f() { git add -u; git status -su; }; f;"
   rco = "!f() { git reset HEAD -q -- \"$@\"; git checkout HEAD -q -- \"$@\"; }; f"
   co = checkout
   cob = checkout -b
   pf = push --force-with-lease
-  ph = "!f()   { git fetch ${1?} ; git reset --hard  ${1?}/${2:-$(git rev-parse --abbrev-ref HEAD)} ;}; f"
-  pho = "!f()  { git fetch origin; git reset --hard origin/${1:-$(git rev-parse --abbrev-ref HEAD)} ;}; f"
-  phom = "!f() { git fetch origin; git reset --hard origin/master ;}; f"
-  pr = pull --rebase
   ir = rebase --interactive
+  pr = pull --rebase
+  prom = pull --rebase origin master
+
   rs = reset --soft
   rh = reset --hard
-  rhh = reset --hard HEAD
-  rhp = reset --hard @{push}
   dh = "!f() { git diff \"$@\" -- ; }; f"
+
+  rhh = reset --hard HEAD
+  rsh = reset --soft HEAD
   dhh = diff HEAD --
-  dhc = diff --cached --
-  prom = pull --rebase origin master
+
+  rhp = reset --hard '@{push}'
+  rsp = reset --soft '@{push}'
+  dhp = diff '@{push}' --
+
   irom = rebase --interactive origin/master
   rsom = reset --soft origin/master
   rhom = reset --hard origin/master
   dhom = diff origin/master --
-  dom = diff origin/master
-  fixup = "!f() { TARGET=$(git rev-parse "$1"); git commit --fixup=$TARGET ${@:2} && EDITOR=true git rebase -i --autostash --autosquash $TARGET^; }; f"
+
+  fixup = "!f() { TARGET=$(git rev-parse $1); git commit --fixup=$TARGET ${@:2} && EDITOR=true git rebase -i --autostash --autosquash $TARGET^; }; f"
   pick = cherry-pick
   edit = "!f() { TARGET=$(git rev-parse HEAD); printf 'You can abort this edition with \\033[0;34mgit ff '; printf $(git rev-parse HEAD); echo '\\033[0m'; git show $TARGET --format=full -s; git reset --soft 'HEAD^' -q ; }; f"
-  unpick = "!f() { COMMIT_ID="${1?}" ; shift; git show $COMMIT_ID -- "${@?}" | git apply -R; }; f"
+  unpick = "!f() { COMMIT_ID=${1?} ; shift; git show $COMMIT_ID -- ${@?} | git apply -R; }; f"
   unapply = apply -R
   drop = rebase --skip
   skip = rebase --skip
@@ -89,13 +92,13 @@
   refs = for-each-ref --format='%(refname)'
   tags = for-each-ref --format='%(refname)' refs/tags
   rems = for-each-ref --format='%(refname)' refs/remotes
-  remove-branches = "! f(){ tmp=\"$(mktemp)\" ; git branch -vv | grep origin > $tmp ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 $tmp | awk '{print $1}' | xargs -r git branch -d ; }; f;"
-  prune-all = "!{ git fetch --all --prune; git prune; git remote | while IFS='\n' read -r remote; do git remote prune $remote; done; git remove-branches; };"
+  prune-all = "!git fetch --all --prune; git remote | xargs -r -L1 git prune; git remove-branches"
+  remove-branches = "!git branch -l --format='%(refname:short)' --merged origin/master | grep -vF master | xargs -r -L1 git branch -d;"
   cdf = clean -df
   download = clone --depth=1
   bmw = blame -M -w
   track = branch -u
-  code-changes = "!git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10"
+  code-changes = !git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10
   # https://stackoverflow.com/questions/4698759/ v
   shallow = "!f(){ git show-ref -s HEAD > .git/shallow; git reflog expire --expire=0; git prune; git prune-packed; git gc; }; f"
 
@@ -106,4 +109,8 @@
 
 [merge]
   tool = vimdiff
+
+[filesystem "Oracle Corporation|14.0.1|/dev/disk1s2"]
+  timestampResolution = 6000 nanoseconds
+  minRacyThreshold = 0 nanoseconds
 
