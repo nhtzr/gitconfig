@@ -43,7 +43,7 @@
   top = "!f() { echo $(git rev-parse --show-toplevel)${1+/}$1 ; } ; f"
   pwd = rev-parse --show-prefix
   st = "!f() { git status -suno ; }; f"
-  stu = "!f() { git status -su ; }; f"
+  stu = "!f() { git status -sunormal --ignored=matching ; }; f"
   view = show
   info = show
   sti = !echo ':silent Gstatus\n:silent wincmd o\n:silent nunmap <silent> <buffer> q\n:silent nnoremap q :quit<cr>' | nvim -s -
@@ -57,8 +57,7 @@
   pf = push --force-with-lease
   ir = rebase --interactive
   pr = pull --rebase
-  prom = pull --rebase origin master
-
+  irp = rebase --interactive @{push}
   rs = reset --soft
   rh = reset --hard
   dh = "!f() { git diff \"$@\" -- ; }; f"
@@ -66,11 +65,12 @@
   rhh = reset --hard HEAD
   rsh = reset --soft HEAD
   dhh = diff HEAD --
-
   rhp = reset --hard '@{push}'
   rsp = reset --soft '@{push}'
   dhp = diff '@{push}' --
+  dhc = diff --cached --
 
+  prom = pull --rebase origin master
   irom = rebase --interactive origin/master
   rsom = reset --soft origin/master
   rhom = reset --hard origin/master
@@ -85,22 +85,27 @@
   skip = rebase --skip
   continue = rebase --continue
   abort = rebase --abort
-  fa = "!f(){ git remote set-branches origin '*'; git fetch --all; }; f"
+  fa = "!f(){ git remote set-branches origin '*'; git fetch --all --tags; }; f"
   ff = merge --ff-only
   pu = "!f(){ git push --set-upstream ${1:-origin} $(git rev-parse --abbrev-ref HEAD); }; f"
   pup = !git pull && git submodule init && git submodule update && git submodule status && git submodule foreach git pull origin master
   refs = for-each-ref --format='%(refname)'
   tags = for-each-ref --format='%(refname)' refs/tags
   rems = for-each-ref --format='%(refname)' refs/remotes
-  prune-all = "!git fetch --all --prune; git remote | xargs -r -L1 git prune; git remove-branches"
-  remove-branches = "!git branch -l --format='%(refname:short)' --merged origin/master | grep -vF master | xargs -r -L1 git branch -d;"
-  cdf = clean -df
+  cdf = "!f(){ git clean -df \"$(git top)\" }; f"
+
+  #prune-locals = moved ~/bin/git-prune-locals
+  prune-remotes = "!f(){ git fetch --all --prune; git remote | xargs -r -L1 git remote prune; }; f"
+  prune-all = "!f(){ git checkout master --; git prune-remotes; git prune-locals; }; f"
+
   download = clone --depth=1
   bmw = blame -M -w
   track = branch -u
   code-changes = !git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10
   # https://stackoverflow.com/questions/4698759/ v
   shallow = "!f(){ git show-ref -s HEAD > .git/shallow; git reflog expire --expire=0; git prune; git prune-packed; git gc; }; f"
+  semver = describe --dirty --always --first-parent --tags
+  tree = log  --decorate --oneline --graph --simplify-by-decoration --tags --branches --decorate-refs-exclude 'refs/remotes/origin/*'
 
 [diff]
   algorithm = patience
@@ -113,4 +118,10 @@
 [filesystem "Oracle Corporation|14.0.1|/dev/disk1s2"]
   timestampResolution = 6000 nanoseconds
   minRacyThreshold = 0 nanoseconds
+
+[filter "lfs"]
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
 
