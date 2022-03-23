@@ -40,7 +40,7 @@
   untracked = cyan
 
 [alias]
-  top = "!f() { echo $(git rev-parse --show-toplevel)${1+/}$1 ; } ; f"
+  top = "!f() { echo \"$(git rev-parse --show-toplevel)${1+/}${1:}\" ; } ; f"
   pwd = rev-parse --show-prefix
   st = "!f() { git status -suno ; }; f"
   stu = "!f() { git status -sunormal --ignored=matching ; }; f"
@@ -76,10 +76,10 @@
   rhom = reset --hard origin/master
   dhom = diff origin/master --
 
-  fixup = "!f() { TARGET=$(git rev-parse $1); git commit --fixup=$TARGET ${@:2} && EDITOR=true git rebase -i --autostash --autosquash $TARGET^; }; f"
+  fixup = "!f() { TARGET=$(git rev-parse ${1:?}); shift; git commit --fixup=$TARGET $@ && EDITOR=true git rebase -i --autostash --autosquash $TARGET^; }; f"
   pick = cherry-pick
   edit = "!f() { TARGET=$(git rev-parse HEAD); printf 'You can abort this edition with \\033[0;34mgit ff '; printf $(git rev-parse HEAD); echo '\\033[0m'; git show $TARGET --format=full -s; git reset --soft 'HEAD^' -q ; }; f"
-  unpick = "!f() { COMMIT_ID=${1?} ; shift; git show $COMMIT_ID -- ${@?} | git apply -R; }; f"
+  unpick = "!f() { COMMIT_ID=${1:?} ; shift; git show $COMMIT_ID -- ${@?} | git apply -R; }; f"
   unapply = apply -R
   drop = rebase --skip
   skip = rebase --skip
@@ -89,23 +89,26 @@
   ff = merge --ff-only
   pu = "!f(){ git push --set-upstream ${1:-origin} $(git rev-parse --abbrev-ref HEAD); }; f"
   pup = !git pull && git submodule init && git submodule update && git submodule status && git submodule foreach git pull origin master
-  refs = for-each-ref --format='%(refname)'
-  tags = for-each-ref --format='%(refname)' refs/tags
-  rems = for-each-ref --format='%(refname)' refs/remotes
+  refs = for-each-ref --format=%(refname)
+  tags = for-each-ref --format=%(refname) refs/tags
+  rems = for-each-ref --format=%(refname) refs/remotes
   cdf = "!f(){ git clean -df \"$(git top)\" }; f"
 
-  #prune-locals = moved ~/bin/git-prune-locals
+  #moved to git-prune-locals  = awk -F, 'FNR==NR { a[$1]; next } $2 && !($2 in a) {print substr($1, 12)}' <( git for-each-ref refs/remotes --format="%(refname)" ) <( git for-each-ref refs/heads --format="%(refname),%(upstream)" )
   prune-remotes = "!f(){ git fetch --all --prune; git remote | xargs -r -L1 git remote prune; }; f"
-  prune-all = "!f(){ git checkout master --; git prune-remotes; git prune-locals; }; f"
+  prune-all     = "!f(){ git checkout master --; git prune-remotes; git prune-locals; }; f"
 
-  download = clone --depth=1
-  bmw = blame -M -w
-  track = branch -u
-  code-changes = !git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10
   # https://stackoverflow.com/questions/4698759/ v
   shallow = "!f(){ git show-ref -s HEAD > .git/shallow; git reflog expire --expire=0; git prune; git prune-packed; git gc; }; f"
+  download = clone --depth=1
+
+  code-changes-one = !git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10
+  code-changes-two = "!f(){ git log --pretty=format:%s $1..${2:-HEAD} | awk -F'[()]' -va='[a-zA-Z0-9]+-[0-9]+' '$2 ~ a' | sort -uVt '(' -k 2 }; f"
+
+  tree = log --decorate --oneline --graph --simplify-by-decoration --tags --branches --decorate-refs-exclude 'refs/remotes/origin/*'
   semver = describe --dirty --always --first-parent --tags
-  tree = log  --decorate --oneline --graph --simplify-by-decoration --tags --branches --decorate-refs-exclude 'refs/remotes/origin/*'
+  bmw = blame -M -w
+  track = branch -u
 
 [diff]
   algorithm = patience
