@@ -51,7 +51,7 @@
   lgm = "!f() { nvim -c \"$(toCommandString GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f --first-parent"
   lga = "!f() { nvim -c \"$(toCommandString GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f --tags --all"
   adu = "!f() { git add -u; git status -su; }; f;"
-  rco = "!f() { git reset HEAD -q -- \"$@\"; git checkout HEAD -q -- \"$@\"; }; f"
+  rco = checkout HEAD --
   co = checkout
   cob = checkout -b
   pf = push --force-with-lease
