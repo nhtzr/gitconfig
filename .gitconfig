@@ -1,7 +1,7 @@
 # This is Git's per-user configuration file.
 [user]
   name = Ezequiel Rosas
-  email = ezequiel.rosas@digitalonus.com
+  email = ezequiel.rosas@armory.io
 
 [core]
   autocrlf = input
@@ -47,9 +47,9 @@
   view = show
   info = show
   sti = !echo ':silent Gstatus\n:silent wincmd o\n:silent nunmap <silent> <buffer> q\n:silent nnoremap q :quit<cr>' | nvim -s -
-  lg = "!f() {  nvim -c \"$(toCommandString GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f"
-  lgm = "!f() { nvim -c \"$(toCommandString GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f --first-parent"
-  lga = "!f() { nvim -c \"$(toCommandString GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f --tags --all"
+  lg = "!f() {  nvim -c \"$(printf '%s ' GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f"
+  lgm = "!f() { nvim -c \"$(printf '%s ' GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f --first-parent"
+  lga = "!f() { nvim -c \"$(printf '%s ' GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f --tags --all"
   adu = "!f() { git add -u; git status -su; }; f;"
   rco = checkout HEAD --
   co = checkout
@@ -128,3 +128,5 @@
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
 
+[url "ssh://git@github.com/"]
+  insteadOf = https://github.com/
