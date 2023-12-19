@@ -40,7 +40,7 @@
   untracked = cyan
 
 [alias]
-  top = "!f() { echo \"$(git rev-parse --show-toplevel)${1+/}${1:}\" ; } ; f"
+  top = "!f() { echo \"$(git rev-parse --show-toplevel)${1:+/}${1:-}\" ; } ; f"
   pwd = rev-parse --show-prefix
   st = "!f() { git status -suno ; }; f"
   stu = "!f() { git status -sunormal --ignored=matching ; }; f"
@@ -55,6 +55,7 @@
   co = checkout
   cob = checkout -b
   pf = push --force-with-lease
+  ri = rebase --interactive
   ir = rebase --interactive
   pr = pull --rebase
   irp = rebase --interactive @{push}
@@ -92,7 +93,7 @@
   refs = for-each-ref --format=%(refname)
   tags = for-each-ref --format=%(refname) refs/tags
   rems = for-each-ref --format=%(refname) refs/remotes
-  cdf = "!f(){ git clean -df \"$(git top)\" }; f"
+  cdf = "!f(){ (cd \"$(git top)\"; git clean -df) }; f"
 
   #moved to git-prune-locals  = awk -F, 'FNR==NR { a[$1]; next } $2 && !($2 in a) {print substr($1, 12)}' <( git for-each-ref refs/remotes --format="%(refname)" ) <( git for-each-ref refs/heads --format="%(refname),%(upstream)" )
   prune-remotes = "!f(){ git fetch --all --prune; git remote | xargs -r -L1 git remote prune; }; f"
