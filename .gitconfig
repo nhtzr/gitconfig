@@ -47,7 +47,7 @@
   view = show
   info = show
   sti = !echo ':silent Gstatus\n:silent wincmd o\n:silent nunmap <silent> <buffer> q\n:silent nnoremap q :quit<cr>' | nvim -s -
-  lg = "!f() {  nvim -c \"$(printf '%s ' GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f"
+  lg = "!f() {  nvim -c ':lua =requireNeogit()' -c tabonly -c 'set number'; }; f"
   lgm = "!f() { nvim -c \"$(printf '%s ' GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f --first-parent"
   lga = "!f() { nvim -c \"$(printf '%s ' GV \"$@\")\" -c 'tabonly' -c 'nunmap <silent> <buffer> q' -c 'nnoremap q :quit!<cr>'; }; f --tags --all"
   adu = "!f() { git add -u; git status -su; }; f;"
@@ -131,3 +131,9 @@
 
 [url "ssh://git@github.com/"]
   insteadOf = https://github.com/
+
+[url "ssh://git@gitlab.com/"]
+  insteadOf = https://gitlab.com/
+
+[url "ssh://git@bitbucket.org/"]
+  insteadOf = https://bitbucket.org/
