@@ -1,7 +1,7 @@
 # This is Git's per-user configuration file.
 [user]
   name = Ezequiel Rosas
-  email = ezequiel.rosas@armory.io
+  email = er7647@exo.att.com
 
 [core]
   autocrlf = input
@@ -88,7 +88,7 @@
   abort = rebase --abort
   fa = "!f(){ git remote set-branches origin '*'; git fetch --all --tags; }; f"
   ff = merge --ff-only
-  pu = "!f(){ git push --set-upstream ${1:-origin} $(git rev-parse --abbrev-ref HEAD); }; f"
+  pu = "!f(){ set -ueo pipefail; myBranch=\"$(git rev-parse --abbrev-ref HEAD)\"; if test \"$myBranch\" = 'master' || test \"$myBranch\" = 'main' ; then >&2 echo Preventing overriding master, if you are sure, run git push --set-upstream \"${1:-origin}\" \"$myBranch\"; return 1; fi; git push --set-upstream \"${1:-origin}\" \"$myBranch\"; }; f"
   pup = !git pull && git submodule init && git submodule update && git submodule status && git submodule foreach git pull origin master
   refs = for-each-ref --format=%(refname)
   tags = for-each-ref --format=%(refname) refs/tags
@@ -129,5 +129,14 @@
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
 
+#[url "git@github.com:"]
+#	insteadOf = https://github.com/
+#[url "git@gitlab.com:"]
+#  insteadOf = https://gitlab.com/
+#[url "git@bitbucket.org:"]
+#  insteadOf = https://bitbucket.org/
+[url "ssh://git@egbitbucket.dtvops.net:7999/"]
+	insteadOf = https://egbitbucket.dtvops.net/
+	insteadOf = https://egbitbucket.dtvops.net/scm/
 [url "ssh://git@github.com/"]
-  insteadOf = https://github.com/
+	insteadOf = https://github.com/

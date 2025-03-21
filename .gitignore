@@ -37,6 +37,7 @@ sonar-project.properties
 /docker-ip.txt
 /exposed-port.txt
 /mvnvm.properties
+venv/
 .envrc
 
 # OS generated files #
